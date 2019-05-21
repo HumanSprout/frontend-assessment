@@ -1,4 +1,5 @@
-html, .App {
+html,
+.App {
   height: 100%;
 }
 #sidenav {
@@ -8,3 +9,13 @@ html, .App {
   background: pink;
 }
 
+#content {
+  position: absolute;
+  width: 70%;
+  left: calc(30%);
+  background: green;
+}
+
+#item__property {
+  display: inline-block;
+}
