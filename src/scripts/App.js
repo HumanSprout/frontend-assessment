@@ -15,7 +15,7 @@ const formatReadableName = name => {
       : convertToProper(name.slice(5)) + " Name";
   }
   return name.indexOf("_") > 0
-    ? // capitalize and convert underscore '_' to space ' '
+    ? // capitalize and convert underscore '_' to space ' ' for compound name values
       name
         .split("_")
         .map(subString => {
@@ -33,7 +33,8 @@ const formatReadableName = name => {
           }
         })
         .join(" ")
-    : convertToProper(name);
+    : // or just convert simple values
+      convertToProper(name);
 };
 // rebuilds data structure to match sidenav component hierarchy
 const massageData = data =>
@@ -43,10 +44,9 @@ const massageData = data =>
         // spread properties to top level object
         acc[cur.containing_object.name] = { ...cur.containing_object };
       } else if (cur.properties) {
-        // as above
         acc[cur.name] = { ...cur };
       } else {
-        // put individual elements into general info object
+        // or put individual elements into general info object
         acc.general.properties.push({ ...cur });
       }
       return acc;
@@ -63,16 +63,12 @@ const createUsageContent = arr => {
       switch (el) {
         case "giving_tree":
           return `🌲 Giving Tree`;
-          break;
         case "console":
           return `💻 Console`;
-          break;
         case "community":
           return `🏙️ Community`;
-          break;
         default:
-          `🍺 ${formatReadableName(el)}`;
-          return;
+          return `🍺 ${formatReadableName(el)}`;
       }
     })
     .join(" ");
@@ -119,16 +115,17 @@ const SideNav = props => {
             {formatReadableName(content[key].name)}
           </p>
         </a>
-        {// render children in active section
-        active === content[key].name
-          ? content[key].properties.map(el => (
+        {active === content[key].name
+          ? // render children if section is active
+            content[key].properties.map(el => (
               <div key={`${key}_link_${el.name}`}>
                 <a href={`#${el.name}`}>
                   <p className="sidenav__item">{formatReadableName(el.name)}</p>
                 </a>
               </div>
             ))
-          : []}
+          : // or dont
+            []}
       </div>
     ));
   return <div id="sidenav">{createLinks(content.keys)}</div>;

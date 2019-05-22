@@ -6,15 +6,15 @@ html,
   position: fixed;
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 25%;
   height: 100%;
   background: pink;
 }
 
 #content {
   position: absolute;
-  width: 70%;
-  left: calc(30%);
+  width: 75%;
+  left: calc(25%);
   background: #7fe2a8;
 }
 
@@ -43,8 +43,9 @@ p.sidenav__section {
 }
 
 div.fieldgroupitem__div--outer {
-  margin-left: 10px;
+  margin-left: 20px;
   background: #7afaff;
+  width: 80%;
 }
 
 div.item__property {
