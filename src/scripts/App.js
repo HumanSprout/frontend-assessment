@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../style.css";
 const data = require("../../schema.json");
 // ----- Utility Functions
@@ -85,14 +85,14 @@ const createFieldGroupItem = el => {
       className="fieldgroupitem__div--outer"
       key={`item_${el.name}`}
     >
-      <h4 className="fieldgroupitem__h2">{formatReadableName(el.name)}</h4>
+      <h2 className="fieldgroupitem__h2">{formatReadableName(el.name)}</h2>
       <div className="item__property">
         <span className="item__prompt">Type:</span>
-        <span className="item__content">{el.data_type}</span>
+        <span className="item__content datatype">{el.data_type}</span>
       </div>
       <div className="item__property">
         <span className="item__prompt">Usage:</span>
-        <span className="item__content">
+        <span className="item__content usage">
           {el.app_keys ? createUsageContent(el.app_keys) : "none"}
         </span>
       </div>
@@ -106,15 +106,29 @@ const createFieldGroupItem = el => {
 // ----- React Components
 const SideNav = props => {
   const { content } = props;
+  // hook for active group
+  const [active, setActive] = useState("general");
   const createLinks = keys =>
     keys.map(key => (
       <div key={`sidenav__${key}`}>
-        <h2>{formatReadableName(content[key].name)}</h2>
-        {content[key].properties.map(el => (
-          <div key={`${key}_link_${el.name}`}>
-            <a href={`#${el.name}`}>{formatReadableName(el.name)}</a>
-          </div>
-        ))}
+        <a href={`#${content[key].name}`}>
+          <p
+            className="sidenav__section"
+            onClick={() => setActive(content[key].name)}
+          >
+            {formatReadableName(content[key].name)}
+          </p>
+        </a>
+        {// render children in active section
+        active === content[key].name
+          ? content[key].properties.map(el => (
+              <div key={`${key}_link_${el.name}`}>
+                <a href={`#${el.name}`}>
+                  <p className="sidenav__item">{formatReadableName(el.name)}</p>
+                </a>
+              </div>
+            ))
+          : []}
       </div>
     ));
   return <div id="sidenav">{createLinks(content.keys)}</div>;
@@ -123,7 +137,7 @@ const Content = props => {
   const { content } = props;
   const createFieldGroups = keys =>
     keys.map(key => (
-      <div key={`fieldgroup_${key}`}>
+      <div key={`fieldgroup_${key}`} id={content[key].name}>
         <h2>{formatReadableName(content[key].name)}</h2>
         {content[key].properties.map(el => createFieldGroupItem(el))}
       </div>
@@ -131,19 +145,12 @@ const Content = props => {
   return <div id="content">{createFieldGroups(content.keys)}</div>;
 };
 
-const dataContext = React.createContext({
-  active: "general",
-  ...formattedData
-});
-
 const App = () => {
   return (
-    <dataContext.Provider>
-      <div className="App">
-        <SideNav content={formattedData} />
-        <Content content={formattedData} />
-      </div>
-    </dataContext.Provider>
+    <div className="App">
+      <SideNav content={formattedData} />
+      <Content content={formattedData} />
+    </div>
   );
 };
 

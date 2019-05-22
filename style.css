@@ -4,6 +4,8 @@ html,
 }
 #sidenav {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   width: 30%;
   height: 100%;
   background: pink;
@@ -13,9 +15,48 @@ html,
   position: absolute;
   width: 70%;
   left: calc(30%);
-  background: green;
+  background: #7fe2a8;
 }
 
 #item__property {
   display: inline-block;
+}
+
+p.sidenav__section {
+  font-size: 20px;
+  padding: 2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.fieldname {
+  color: #931618;
+  margin-left: 10px;
+}
+
+.datatype,
+.usage,
+.sidenav__item {
+  margin-left: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+div.fieldgroupitem__div--outer {
+  margin-left: 10px;
+  background: #7afaff;
+}
+
+div.item__property {
+  margin-left: 10px;
+  padding-bottom: 2px;
+}
+
+h2.fieldgroupitem__h2 {
+  margin-left: 2px;
+  padding-top: 2px;
+}
+
+div.item__property {
+  font-size: 18px;
 }
