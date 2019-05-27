@@ -107,16 +107,14 @@ const createFieldGroupItem = (el, group) => {
 
 // ----- React Components
 const SideNav = props => {
-  const { content } = props;
-  // hook for active group
-  const [active, setActive] = useState("general");
+  const { content, active, update } = props;
   const createLinks = keys =>
     keys.map(key => (
       <div key={`sidenav__${key}`}>
         <a href={`#${content[key].name}`}>
           <p
             className="sidenav__section"
-            onClick={() => setActive(content[key].name)}
+            onClick={() => update(content[key].name)}
           >
             {formatReadableName(content[key].name)}
           </p>
@@ -140,16 +138,20 @@ const SideNav = props => {
 };
 
 const Content = props => {
-  const { content } = props;
+  const { content, active } = props;
   const createFieldGroups = keys =>
-    keys.map(key => (
-      <div key={`fieldgroup_${key}`} id={content[key].name}>
-        <h2>{formatReadableName(content[key].name)}</h2>
-        {content[key].properties.map(el =>
-          createFieldGroupItem(el, content[key].name)
-        )}
-      </div>
-    ));
+    keys.map(key =>
+      active == content[key].name ? (
+        <div key={`fieldgroup_${key}`} id={content[key].name}>
+          <h2>{formatReadableName(content[key].name)}</h2>
+          {content[key].properties.map(el =>
+            createFieldGroupItem(el, content[key].name)
+          )}
+        </div>
+      ) : (
+        []
+      )
+    );
   return (
     <div id="content">
       {content.keys ? createFieldGroups(content.keys) : []}
@@ -161,6 +163,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      active: "general",
       ready: false,
       data: {}
     };
@@ -174,11 +177,18 @@ class App extends React.Component {
     const data = await massageData(json);
     this.setState({ data, ready: true });
   }
+  updateActiveGroup(activeGroup) {
+    this.setState({ active: activeGroup });
+  }
   render() {
     return this.state.ready ? (
       <div className="App">
-        <SideNav content={this.state.data} />
-        <Content content={this.state.data} />
+        <SideNav
+          content={this.state.data}
+          active={this.state.active}
+          update={this.updateActiveGroup.bind(this)}
+        />
+        <Content content={this.state.data} active={this.state.active} />
       </div>
     ) : (
       <div>loading...</div>
