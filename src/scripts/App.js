@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../style.css";
-const data = require("../../schema.json");
+
 // ----- Utility Functions
 // creates human readable name from elements' name property
 const formatReadableName = name => {
@@ -19,6 +19,7 @@ const formatReadableName = name => {
       name
         .split("_")
         .map(subString => {
+          // handle more edge cases
           switch (subString) {
             case "et":
               return "EverTrue";
@@ -28,17 +29,19 @@ const formatReadableName = name => {
               return "Lower Quartile";
             case "uq":
               return "Upper Quartile";
+            // format compound values
             default:
               return convertToProper(subString);
           }
         })
         .join(" ")
-    : // or just convert simple values
+    : // convert simple values
       convertToProper(name);
 };
+
 // rebuilds data structure to match sidenav component hierarchy
-const massageData = data =>
-  data.reduce(
+const massageData = data => {
+  data = data.reduce(
     (acc, cur) => {
       if (cur.containing_object) {
         // spread properties to top level object
@@ -53,9 +56,10 @@ const massageData = data =>
     },
     { general: { properties: [], name: "general" } }
   );
-// cache formatted data with keys for array like iteration
-const formattedData = massageData(data);
-formattedData.keys = Object.keys(formattedData);
+  data.keys = Object.keys(data);
+  return data;
+};
+
 // generates strings for displaying app_key property values
 const createUsageContent = arr => {
   return arr
@@ -73,6 +77,7 @@ const createUsageContent = arr => {
     })
     .join(" ");
 };
+
 // creates content for the main section
 const createFieldGroupItem = el => {
   return (
@@ -99,6 +104,7 @@ const createFieldGroupItem = el => {
     </div>
   );
 };
+
 // ----- React Components
 const SideNav = props => {
   const { content } = props;
@@ -128,8 +134,11 @@ const SideNav = props => {
             []}
       </div>
     ));
-  return <div id="sidenav">{createLinks(content.keys)}</div>;
+  return (
+    <div id="sidenav">{content.keys ? createLinks(content.keys) : []}</div>
+  );
 };
+
 const Content = props => {
   const { content } = props;
   const createFieldGroups = keys =>
@@ -139,16 +148,40 @@ const Content = props => {
         {content[key].properties.map(el => createFieldGroupItem(el))}
       </div>
     ));
-  return <div id="content">{createFieldGroups(content.keys)}</div>;
-};
-
-const App = () => {
   return (
-    <div className="App">
-      <SideNav content={formattedData} />
-      <Content content={formattedData} />
+    <div id="content">
+      {content.keys ? createFieldGroups(content.keys) : []}
     </div>
   );
 };
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ready: false,
+      data: {}
+    };
+  }
+  async componentDidMount() {
+    const response = await fetch(
+      "https://raw.githubusercontent.com/HumanSprout/frontend-assessment/master/schema.json",
+      { method: "GET" }
+    );
+    const json = await response.json();
+    const data = await massageData(json);
+    this.setState({ data, ready: true });
+  }
+  render() {
+    return this.state.ready ? (
+      <div className="App">
+        <SideNav content={this.state.data} />
+        <Content content={this.state.data} />
+      </div>
+    ) : (
+      <div>loading...</div>
+    );
+  }
+}
 
 export default App;

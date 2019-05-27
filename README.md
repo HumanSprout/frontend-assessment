@@ -13,10 +13,6 @@ This solution:
 - Expands a group item menu and displays all properties in that group when clicked
 - Navigate to the details in the main section for that property when a sub-element is clicked
 
-## Tips for parsing the JSON
-
-didn't need 'em :D
-
 ## Setup
 
 same as the original repo:
@@ -28,3 +24,5 @@ same as the original repo:
 ## Notes
 
 I considered using Context or render props to pass a value representing the "active group" to dynamically render content from only the active group but decided on this simpler solution only utilizing a single hook on the sidenav component. I believe this solution meets the criteria as outlined.
+
+update: I realized I should probably make an AJAX call instead of requiring in the schema.json so I changed the App component into a container to do that
