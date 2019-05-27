@@ -79,10 +79,10 @@ const createUsageContent = arr => {
 };
 
 // creates content for the main section
-const createFieldGroupItem = el => {
+const createFieldGroupItem = (el, group) => {
   return (
     <div
-      id={el.name}
+      id={`${group}-${el.name}`}
       className="fieldgroupitem__div--outer"
       key={`item_${el.name}`}
     >
@@ -125,7 +125,7 @@ const SideNav = props => {
           ? // render children if section is active
             content[key].properties.map(el => (
               <div key={`${key}_link_${el.name}`}>
-                <a href={`#${el.name}`}>
+                <a href={`#${content[key].name}-${el.name}`}>
                   <p className="sidenav__item">{formatReadableName(el.name)}</p>
                 </a>
               </div>
@@ -145,7 +145,9 @@ const Content = props => {
     keys.map(key => (
       <div key={`fieldgroup_${key}`} id={content[key].name}>
         <h2>{formatReadableName(content[key].name)}</h2>
-        {content[key].properties.map(el => createFieldGroupItem(el))}
+        {content[key].properties.map(el =>
+          createFieldGroupItem(el, content[key].name)
+        )}
       </div>
     ));
   return (
