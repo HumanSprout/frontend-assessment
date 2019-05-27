@@ -2,20 +2,32 @@ html,
 .App {
   height: 100%;
 }
+* {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
 #sidenav {
   position: fixed;
   display: flex;
   flex-direction: column;
-  width: 25%;
+  justify-content: space-between;
+  width: 30%;
   height: 100%;
-  background: pink;
+  background: #ff6bb2;
+}
+
+#sidenav:hover {
+  overflow-y: scroll;
 }
 
 #content {
   position: absolute;
   height: 500vh;
-  width: 75%;
-  left: calc(25%);
+  width: 70%;
+  left: calc(30%);
   background: #7fe2a8;
 }
 
@@ -45,8 +57,19 @@ p.sidenav__section {
 
 div.fieldgroupitem__div--outer {
   margin-left: 20px;
+  margin-top: 20px;
   background: #7afaff;
   width: 80%;
+}
+
+div.sidenav__group,
+div.sidenav__property {
+  background: #f48bbe;
+  width: 80%;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 div.item__property {

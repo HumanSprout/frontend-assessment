@@ -110,7 +110,7 @@ const SideNav = props => {
   const { content, active, update } = props;
   const createLinks = keys =>
     keys.map(key => (
-      <div key={`sidenav__${key}`}>
+      <div key={`sidenav__${key}`} className="sidenav__group">
         <a href={`#${content[key].name}`}>
           <p
             className="sidenav__section"
@@ -122,7 +122,7 @@ const SideNav = props => {
         {active === content[key].name
           ? // render children if section is active
             content[key].properties.map(el => (
-              <div key={`${key}_link_${el.name}`}>
+              <div key={`${key}_link_${el.name}`} className="sidenav__property">
                 <a href={`#${content[key].name}-${el.name}`}>
                   <p className="sidenav__item">{formatReadableName(el.name)}</p>
                 </a>
