@@ -25,4 +25,4 @@ same as the original repo:
 
 I considered using Context or render props to pass a value representing the "active group" to dynamically render content from only the active group but decided on this simpler solution only utilizing a single hook on the sidenav component. I believe this solution meets the criteria as outlined.
 
-update: I realized I should probably make an AJAX call instead of requiring in the schema.json so I changed the App component into a container to do that
+update: I realized I should probably make an AJAX call instead of requiring in the schema.json so I changed the App component into a container to do that. After this, dyanimic rendering was fairly trivial to wire up so I removed the hook and passed down the method to do that as well.
